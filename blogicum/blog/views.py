@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 
 posts = [
@@ -53,11 +54,17 @@ def index(request):
 
 
 def post_detail(request, id):
-    template_name = 'blog/detail.html'
-    context = {
-        'post': posts[id],
-    }
-    return render(request, template_name, context)
+    ids = [post['id'] for post in posts]
+    if id in ids:
+        template_name = 'blog/detail.html'
+        for post in posts:
+            if id == post['id']:
+                context = {
+                    'post': posts[id],
+                }
+        return render(request, template_name, context)
+    else:
+        return HttpResponse('Ошибочный id')
 
 
 def category_posts(request, category_slug):
